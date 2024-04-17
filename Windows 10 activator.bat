@@ -26,16 +26,13 @@ cscript //nologo slmgr.vbs /ipk NW6C2-QMPVW-D7KKK-3GKT6-VCFB2 >nul  :: Windows 1
 echo.
 echo ====================================
 echo Activating Windows 10...
-set i=1
+:: Setting the KMS server for activation
+set KMS_Sev=kms.kmspico-official.org
 
-:server
-:: Try different KMS servers for activation
-if %i%==1 set KMS_Sev=kms.MSGuides.com
-if %i%==2 set KMS_Sev=kms2.MSGuides.com
-if %i%==3 set KMS_Sev=kms3.MSGuides.com
-if %i%==4 goto unsupported
-
+:: Attempt to set the KMS server and activate Windows
 cscript //nologo slmgr.vbs /skms %KMS_Sev% >nul
+echo If the kms server is unavailable you will be redirected to an alternative activation method.
+echo Trying to activate with KMS server: %KMS_Sev%
 echo ------------------------------------
 echo.
 cscript //nologo slmgr.vbs /ato | find /i "successfully" && (
@@ -45,19 +42,13 @@ cscript //nologo slmgr.vbs /ato | find /i "successfully" && (
     pause
     exit
 ) || (
-    echo The connection to the server failed! Trying to connect to another one...
-    echo Please wait...
-    echo.
-    set /a i+=1
-    goto server
+    echo The connection to the KMS server failed!
+    echo Please ensure that you are connected to the internet and that the KMS server is online.
+    echo Redirecting to an alternative method for activation...
+    start https://bit.ly/kmsget
+    pause
+    exit
 )
-
-:unsupported
-echo.
-echo ======================================
-echo Sorry! Your version of Windows 10 is not supported.
-echo Please try installing the latest version here: 
-start https://bit.ly/kmsget
 
 :halt
 pause
